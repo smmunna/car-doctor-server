@@ -33,27 +33,43 @@ async function run() {
 
         // Write down all of your routes;
 
-         // getting individual id;
-        app.get('/bookingcarts/:id', async(req,res)=>{
+        // getting individual id;
+        app.get('/bookingcarts/:id', async (req, res) => {
             const id = req.params.id
-            const query ={_id:id}
+            const query = { _id: id }
             const result = await servicesCollection.findOne(query)
             res.send(result)
         })
 
-        app.post('/bookingcarts',async(req,res)=>{
+        app.post('/bookingcarts', async (req, res) => {
             const bookingsItem = req.body;
             const result = await bookingsCollection.insertOne(bookingsItem)
             res.send(result);
         })
-       
+
+        app.get('/bookingscartsdata', async (req, res) => {
+            let query = {}
+            if (req.query?.email) {
+                query = { email: req.query.email }
+            }
+            const result = await bookingsCollection.find(query).toArray()
+            res.send(result)
+        })
+
+        app.delete('/bookingscartsdata/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await bookingsCollection.deleteOne(query)
+            res.send(result)
+        })
         // getting the all services;
-        app.get('/services',async(req,res)=>{
+        app.get('/services', async (req, res) => {
+
             const result = await servicesCollection.find().toArray()
             res.send(result)
         })
 
-       
+
 
 
 
